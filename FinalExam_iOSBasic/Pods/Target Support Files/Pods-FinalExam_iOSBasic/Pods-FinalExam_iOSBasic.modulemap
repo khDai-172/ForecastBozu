@@ -1,0 +1,6 @@
+framework module Pods_FinalExam_iOSBasic {
+  umbrella header "Pods-FinalExam_iOSBasic-umbrella.h"
+
+  export *
+  module * { export * }
+}
