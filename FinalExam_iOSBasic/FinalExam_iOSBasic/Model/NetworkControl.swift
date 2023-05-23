@@ -17,7 +17,7 @@ protocol NetworkControlProtocol {
 class NetworkControl {
 
     let baseURL = "https://api.openweathermap.org/data/2.5/forecast?appid="
-    let baseAPI = "9a22ed91d6856a3cbb9cada352f93def"
+    let baseAPI = Key.APIKey
     let defaultSession = URLSession(configuration: URLSessionConfiguration.default)
     var dataTask: URLSessionDataTask?
 

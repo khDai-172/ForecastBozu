@@ -20,6 +20,7 @@
 		83213A4E29AD72FB009B82F2 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83213A4D29AD72FB009B82F2 /* SearchViewController.swift */; };
 		836FEDBF29BDF65E00558C4F /* AlamofirePack in Frameworks */ = {isa = PBXBuildFile; productRef = 836FEDBE29BDF65E00558C4F /* AlamofirePack */; };
 		8383A7EA2A1B4466003AFD5F /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8383A7E92A1B4466003AFD5F /* Constant.swift */; };
+		83BCAD022A1CC21800F0930F /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BCAD012A1CC21800F0930F /* APIKey.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		83213A4B29ACA814009B82F2 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		83213A4D29AD72FB009B82F2 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		8383A7E92A1B4466003AFD5F /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		83BCAD012A1CC21800F0930F /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
 		83D68CA229D48AE4009F48D6 /* AlamofirePack */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AlamofirePack; path = ../AlamofirePack; sourceTree = "<group>"; };
 		83F1A54529BCDF5100AF2DCE /* FinalExam_iOSBasic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinalExam_iOSBasic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B7ABEC4E97678396F7BCE5C /* Pods-FinalExam_iOSBasic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FinalExam_iOSBasic.release.xcconfig"; path = "Target Support Files/Pods-FinalExam_iOSBasic/Pods-FinalExam_iOSBasic.release.xcconfig"; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				8383A7E92A1B4466003AFD5F /* Constant.swift */,
+				83BCAD012A1CC21800F0930F /* APIKey.swift */,
 			);
 			path = Constant;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 			files = (
 				8383A7EA2A1B4466003AFD5F /* Constant.swift in Sources */,
 				8319770429AC86A500F19847 /* ViewController.swift in Sources */,
+				83BCAD022A1CC21800F0930F /* APIKey.swift in Sources */,
 				83213A4E29AD72FB009B82F2 /* SearchViewController.swift in Sources */,
 				83213A4A29ACA807009B82F2 /* NetworkControl.swift in Sources */,
 				8319771929AC8ABE00F19847 /* WeatherDetailCell.swift in Sources */,
