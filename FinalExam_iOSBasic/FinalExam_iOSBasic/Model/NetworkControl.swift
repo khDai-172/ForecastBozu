@@ -65,19 +65,23 @@ extension NetworkControl {
             completionHandler(nil, "URL incorrect")
             return
         }
+
         dataTask = defaultSession.dataTask(with: url) { (data, response, error) in
             if let error = error?.localizedDescription {
                 completionHandler(nil, error)
                 return
             }
+
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
                 completionHandler(nil, "Server failed")
                 return
             }
+
             guard let data = data else {
                 return
             }
+
             let string = String(data: data, encoding: .utf8)
             completionHandler(string, nil)
         }
