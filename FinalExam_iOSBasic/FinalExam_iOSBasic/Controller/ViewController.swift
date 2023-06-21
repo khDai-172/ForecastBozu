@@ -34,11 +34,13 @@ class ViewController: UIViewController {
         // setForecastForTable()
         networkControl.delegate = self
         setUpWeatherTable()
+        getCurrentData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getForecastData()
+        forecastTableView.reloadData()
     }
 
     @IBAction func moveToSearch(_ sender: Any) {
@@ -61,20 +63,22 @@ class ViewController: UIViewController {
 // MARK: - NetworkControlProtocol
 
 extension ViewController: NetworkControlProtocol {
-    func didUpdateForecastData(_ networkControl: NetworkControl, weatherData: WeatherData?) {
+    func didUpdateWeatherData(_ networkControl: NetworkControl, weatherData: CurrentWeather?) {
         DispatchQueue.main.async {
-            self.cityNow.text = weatherData?.city.name
-            self.tempLowest.text = weatherData?.tempString(weatherData?.list[2].main.tempMin ?? 0.0)
-            self.tempHighest.text =
-            (weatherData?.tempString(weatherData?.list[2].main.tempMax ?? 0.0) ?? "") + Const.tempUnit
-            self.pressureNow.text = weatherData?.presString(weatherData?.list[2].main.pressure ?? 0.0)
-            self.humidNow.text =
-            (weatherData?.humString(weatherData?.list[2].main.humidity ?? 0.0) ?? "") + Const.humUnit
-            self.conditNow.text = weatherData?.switchConditCase(
-                description: weatherData?.list[2].weather[0].description ?? "")
-            self.iconNow.image = UIImage(named: weatherData?.list[2].weather[0].icon ?? "")
-            self.tempBold.text = String(format: "%.f", weatherData?.list[2].main.temp ?? 0.0)
-            self.weatherData = weatherData
+            self.cityNow.text = weatherData?.name
+            self.tempLowest.text = String().tempString(weatherData?.main.tempMin ?? 0.0)
+            self.tempHighest.text = String().tempString(weatherData?.main.tempMax ?? 0.0)
+            self.pressureNow.text = String().presString(weatherData?.main.pressure ?? 0.0)
+            self.humidNow.text = String().humString(weatherData?.main.humidity ?? 1.0) + Const.humUnit
+            self.conditNow.text = String().switchConditCase(weatherData?.weather[0].description ?? "")
+            self.iconNow.image = UIImage(named: weatherData?.weather[0].icon ?? "")
+            self.tempBold.text = String(format: "%.1f", weatherData?.main.temp ?? "0.0")
+        }
+    }
+
+    func didUpdateForecastData(_ networkControl: NetworkControl, forecastData: WeatherData?) {
+        DispatchQueue.main.async {
+            self.weatherData = forecastData
             self.forecastTableView.reloadData()
         }
     }
@@ -88,7 +92,7 @@ extension ViewController: NetworkControlProtocol {
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return weatherData?.list.count ?? 0
+        return weatherData?.list.count ?? 1
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Const.cellIdentifier,
@@ -98,9 +102,8 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         guard let forecastData = weatherData else { return UITableViewCell() }
 
         cell.iconCell.image = UIImage(named: forecastData.list[indexPath.row].weather[0].icon ?? "")
-        cell.tempCell.text = forecastData.tempString(forecastData.list[indexPath.row].main.temp ?? 0.0)
-        cell.conditCell.text = forecastData.switchConditCase(
-            description: forecastData.list[indexPath.row].weather[0].description ?? "")
+        cell.tempCell.text = String().tempString(forecastData.list[indexPath.row].main.temp ?? 0.0)
+        cell.conditCell.text = String().switchConditCase(forecastData.list[indexPath.row].weather[0].description ?? "")
         cell.timeCell.text = forecastData.list[indexPath.row].timeStamp ?? ""
         return cell
     }
@@ -117,6 +120,14 @@ extension ViewController {
             // let url = "\(myUrl)&q=Berlin&lang=vi&units=metric"
             // decodeForecast(from: url)
             networkControl.getForecast(in: "Berlin")
+        }
+    }
+
+    private func getCurrentData() {
+        if let cityName = ViewController.cityCall {
+            networkControl.getCurrent(in: cityName)
+        } else {
+            networkControl.getCurrent(in: "Berlin")
         }
     }
 

@@ -10,13 +10,15 @@ import UIKit
 
 protocol NetworkControlProtocol {
     // func fetchAPIFromURL(_ url: String, completionHandler: @escaping (String?, String?) -> Void)
-    func didUpdateForecastData(_ networkControl: NetworkControl, weatherData: WeatherData?)
+    func didUpdateWeatherData(_ networkControl: NetworkControl, weatherData: CurrentWeather?)
+    func didUpdateForecastData(_ networkControl: NetworkControl, forecastData: WeatherData?)
     func didFailWithError(error: Error)
 }
 
 class NetworkControl {
 
-    let baseURL = "https://api.openweathermap.org/data/2.5/forecast?appid="
+    let forecastURL = "https://api.openweathermap.org/data/2.5/forecast?units=metric&lang=vi&appid="
+    let currentURL = "https://api.openweathermap.org/data/2.5/weather?units=metric&lang=vi&appid="
     let baseAPI = Key.APIKey
     let defaultSession = URLSession(configuration: URLSessionConfiguration.default)
     var dataTask: URLSessionDataTask?
@@ -25,8 +27,16 @@ class NetworkControl {
 
     func getForecast(in cityName: String) {
         let city = cityName.replacingOccurrences(of: " ", with: "+")
-        let url = "\(baseURL)\(baseAPI)&q=\(city)&units=metric"
+        let url = "\(forecastURL)\(baseAPI)&q=\(city)"
+        print(url)
         fetchForecastData(from: url)
+    }
+
+    func getCurrent(in cityName: String) {
+        let city = cityName.replacingOccurrences(of: " ", with: "+")
+        let url = "\(currentURL)\(baseAPI)&q=\(city)"
+        print(url)
+        fetchWeatherData(from: url)
     }
 
     func fetchForecastData(from urlString: String) {
@@ -39,7 +49,7 @@ class NetworkControl {
 
                 if let safeData = data {
                     if let forecastData = self.parseJSON(safeData) {
-                        self.delegate?.didUpdateForecastData(self, weatherData: forecastData)
+                        self.delegate?.didUpdateForecastData(NetworkControl(), forecastData: forecastData)
                     }
                 }
             })
@@ -47,12 +57,59 @@ class NetworkControl {
         dataTask?.resume()
     }
 
-    func parseJSON(_ weatherData: Data) -> WeatherData? {
+    func parseJSON(_ forecastData: Data) -> WeatherData? {
         let decoder = JSONDecoder()
         do {
-            let forecast = try decoder.decode(WeatherData.self, from: weatherData)
-            return forecast
+            let decodedForecast = try decoder.decode(WeatherData.self, from: forecastData)
+            print(decodedForecast)
+            return decodedForecast
         } catch {
+            delegate?.didFailWithError(error: error)
+            return nil
+        }
+    }
+
+    func fetchWeatherData(from urlString: String) {
+
+        if let url = URL(string: urlString) {
+
+            let session = URLSession(configuration: .default)
+
+            let task = session.dataTask(with: url) { (data, response, error) in
+
+                // Handle networking error
+                if error != nil {
+                    self.delegate?.didFailWithError(error: error!)
+                    return
+                }
+
+                if let httpsResponse = response as? HTTPURLResponse, (200...299).contains(httpsResponse.statusCode) {
+                    print("Request was successfull!")
+                } else {
+                    print("Request failed!")
+                }
+
+                // optional binding data object
+                if let safeData = data {
+                    if let weather = self.parseWeatherJSON(safeData) {
+                        self.delegate?.didUpdateWeatherData(self, weatherData: weather)
+                    }
+                }
+            }
+            // 4. Start the Task:
+            task.resume()
+        }
+    }
+
+    // Convert requested data to local data
+    func parseWeatherJSON(_ weatherData: Data) -> CurrentWeather? {
+        let decoder = JSONDecoder()
+        do {
+            let decodedClimate = try decoder.decode(CurrentWeather.self, from: weatherData)
+            return decodedClimate
+        } catch {
+
+            // Catch decoding error
             delegate?.didFailWithError(error: error)
             return nil
         }

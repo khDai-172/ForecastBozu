@@ -18,23 +18,6 @@ struct WeatherData: Codable {
         return temperatureString
     }
 
-    func presString(_ pres: Double) -> String {
-        let pressureString = String(format: "%.0f pAh", pres)
-        return pressureString
-    }
-
-    func humString(_ hum: Double) -> String {
-        let humidString = String(format: "%.0f", hum)
-        return humidString
-    }
-
-    func dateFormatting(_ date: String) -> Date? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let dateformatted = dateFormatter.date(from: date)
-        return dateformatted
-    }
-
     func switchConditCase(description: String) -> String {
         let uppercase = String(description.prefix(1)).uppercased()
         let remain = String(description.dropFirst())
